@@ -1,26 +1,131 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+:root,
+html[data-theme="engineer"] {
+  --bg: #050807;
+  --surface: #0A1210;
+  --surface-hover: #0E1B17;
+  --border: #12261F;
+  --grid: #12261F;
+  --accent: #00FF9C;
+  --accent-mid: #00C97A;
+  --gold: #FFC900;
+  --text: #E8F5EF;
+  --text-muted: #7C9A8E;
+  --ink: #050807;
+  --radius-card: 0px;
+  --radius-btn: 0px;
+  --radius-pill: 0px;
+  --glow-accent: rgba(0, 255, 156, 0.35);
+  --glow-spark: #FFC900;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html[data-theme="studio"] {
+  --bg: #F6EFE4;
+  --surface: #FFFAF2;
+  --surface-hover: #F2E5D3;
+  --border: #E5D5C2;
+  --grid: #E8DAC8;
+  --accent: #C8102E;
+  --accent-mid: #A30D25;
+  --gold: #C99A2E;
+  --ink: #3A0A10;
+  --text: #1E0F10;
+  --text-muted: #7A6A62;
+  --radius-card: 16px;
+  --radius-btn: 9999px;
+  --radius-pill: 9999px;
+  --glow-accent: rgba(200, 16, 46, 0.3);
+  --glow-spark: #C99A2E;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-grid: var(--grid);
+  --color-accent: var(--accent);
+  --color-accent-mid: var(--accent-mid);
+  --color-gold: var(--gold);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-ink: var(--ink);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+}
+
+/* Base Body Setup */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-display), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 100vh;
+}
+
+/* Custom Text Selection */
+html[data-theme="engineer"] ::selection {
+  background-color: #00FF9C;
+  color: #050807;
+}
+
+html[data-theme="studio"] ::selection {
+  background-color: #C8102E;
+  color: #FFFAF2;
+}
+
+/* Hide Default Cursor on non-touch devices */
+@media (hover: hover) and (pointer: fine) {
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
+    cursor: none !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Lenis Recommended CSS */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Subtle Technical Grid pattern helper */
+.bg-tech-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+}
+
+/* Subtle Radial Vignette */
+.vignette-radial {
+  background: radial-gradient(circle at center, transparent 30%, var(--bg) 95%);
+}
+
+/* Glassmorphism Surface utility */
+.glass-panel {
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
 }
