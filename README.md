@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chris — Dual-Identity Portfolio
+### ECE Systems Engineering & Hardware Architecture &times; THE RED STUDIOS
 
-## Getting Started
+A high-performance personal exhibition built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4**, **Framer Motion**, **GSAP**, and **Lenis Smooth Scroll**.
 
-First, run the development server:
+Two interconnected digital worlds under one unified domain, seamlessly transitioned via an 800ms circular iris pill switcher.
 
+---
+
+## ⚡ How to View the Project
+
+### Option A: One-Click Launcher (Windows)
+Double-click [`view.bat`](file:///c:/Extacuricular/Antigravity/CHR%202.1/view.bat) in the project root directory. It automatically starts the server and opens `http://localhost:3000` in your browser.
+
+### Option B: Interactive Launchpad
+Open [`view.html`](file:///c:/Extacuricular/Antigravity/CHR%202.1/view.html) directly in any browser for clickable route cards into both worlds.
+
+### Option C: Terminal Commands
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Or on Windows PowerShell:
+cmd /c "npm run dev"
 ```
+Then visit **[http://localhost:3000](http://localhost:3000)**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🗺️ Exhibition Map & Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| World | Route | Purpose & Key Features |
+|---|---|---|
+| **Engineer** | `/engineer` (or `/`) | Cybernetic landing hero with 60 FPS X-Ray cursor-reveal, hardware specs, WhatsApp comm |
+| **Engineer** | `/engineer/about` | Bio, photo block with anchored soft green glow, Three-Lane Identity breakdown |
+| **Engineer** | `/engineer/journey` | Scroll-drawn circuit-trace timeline connecting milestones via animated solder vias |
+| **Engineer** | `/engineer/works` | SDM Hackathon, VVCE Connect, RDX 3.0, DAQ with interactive in-page deep-dive modals |
+| **Engineer** | `/engineer/certification` | Scannable credential vault with category filtering (All, Certifications, Hackathons) |
+| **Studio** | `/studio` | Ivory aesthetic landing hero, sacred mandala X-Ray reveal, cinematic direction |
+| **Studio** | `/studio/about` | Bio, RED (Motion/Film) & CYAN (Brand Architecture) division breakdown, ICYM spotlight |
+| **Studio** | `/studio/journey` | Filmstrip timeline with golden aperture mandala nodes and unrolling production briefs |
+| **Studio** | `/studio/works` | Full-bleed dark viewing gallery (`#0C0809`) framed by ivory, documentary spotlight |
+| **Studio** | `/studio/designs` | CYAN design suite with discipline filters (Branding, Editorial, UI/UX, Spatial) |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🌟 Interactive Signature Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Floating World Pill Switcher**:
+   - Fixed at bottom-center of every viewport.
+   - Triggers an 800ms circular iris transition from the pill's exact coordinate:
+     - **Engineer → Studio**: Closes with green accent, opens with a cinematic focus-pull (blur to sharp).
+     - **Studio → Engineer**: Closes with crimson accent, opens with outward circuit traces and a single top-to-bottom scanline sweep.
+   - Preserves sub-paths across worlds (e.g. `/engineer/works` ↔ `/studio/works`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **60 FPS Cursor-Reveal X-Ray**:
+   - Hover over the portrait on desktop to reveal hidden circuit traces (Engineer) or sacred mandala geometry (Studio) with an orbiting spark on the rim.
+   - Mobile tap-and-hold spreads the mask outward at the touch point and smoothly auto-fades after ~1.5s.
 
-## Deploy on Vercel
+3. **In-World Transitions**:
+   - Internal navigation runs lightweight, custom micro-transitions: animated inward cybernetic circuit lines (Engineer) or blooming mandala lines (Studio).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. **Performance & Accessibility**:
+   - Canvas particle drift and cursor tracking pause automatically when the tab is hidden (`visibilitychange`).
+   - Degrades gracefully on low-power devices and respects `prefers-reduced-motion: reduce`.
+   - Comprehensive dynamic SEO with per-world OpenGraph cards, `/sitemap.xml`, and `/robots.txt`.
