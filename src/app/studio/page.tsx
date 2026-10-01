@@ -17,8 +17,16 @@ export default function StudioHomePage() {
     <main className="min-h-screen relative overflow-hidden bg-[#F6EFE4] text-[#1E0F10]">
       {/* FULL-VIEWPORT HERO SECTION */}
       <section className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between pt-4 pb-16 px-6 max-w-7xl mx-auto z-10">
-        {/* HERO BACKGROUND: Responsive Desktop / Mobile Asset */}
-        <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
+        {/* HERO BACKGROUND: Responsive Desktop / Mobile Asset with Faded Edges */}
+        <div
+          className="absolute inset-0 pointer-events-none -z-10 overflow-hidden"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 52% 48% at 50% 50%, #000 20%, rgba(0, 0, 0, 0.85) 45%, rgba(0, 0, 0, 0.25) 70%, transparent 92%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 52% 48% at 50% 50%, #000 20%, rgba(0, 0, 0, 0.85) 45%, rgba(0, 0, 0, 0.25) 70%, transparent 92%)",
+          }}
+        >
           <picture className="w-full h-full block opacity-25 mix-blend-multiply">
             <source media="(max-width: 767px)" srcSet="/assets/studio/studio-bg-mobile.png" />
             <Image
@@ -30,7 +38,8 @@ export default function StudioHomePage() {
               className="object-cover object-top"
             />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#F6EFE4]/30 via-transparent to-[#F6EFE4]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F6EFE4] via-transparent to-[#F6EFE4]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#F6EFE4] via-transparent to-[#F6EFE4]" />
         </div>
 
         {/* HERO MAIN CONTENT GRID */}
@@ -98,18 +107,21 @@ export default function StudioHomePage() {
             <ScrollReveal direction="left" delay={0.25} className="w-full max-w-sm sm:max-w-md">
               <div className="relative group">
                 {/* Soft Studio Ambient Glow Halo */}
-                <div className="absolute -inset-2 bg-gradient-to-tr from-[#C8102E]/20 to-[#C99A2E]/25 rounded-3xl blur-2xl -z-10" />
+                <div className="absolute -inset-6 bg-gradient-to-tr from-[#C8102E]/20 via-[#C99A2E]/25 to-transparent rounded-full blur-3xl -z-10" />
 
-                {/* Status Badge */}
-                <div className="absolute top-4 left-4 z-40 px-3 py-1 bg-[#FFFAF2]/90 border border-[#E5D5C2] rounded-full text-[10px] text-[#C8102E] font-medium shadow-sm">
-                  SACRED REVEAL: HOVER OR TOUCH
-                </div>
-
-                {/* CURSOR REVEAL PORTRAIT EXHIBITION (Vertical Anchor) */}
-                <div className="w-full aspect-[4/5] bg-[#FFFAF2] border border-[#E5D5C2] rounded-2xl overflow-hidden shadow-2xl">
+                {/* CURSOR REVEAL PORTRAIT EXHIBITION (Seamless Floating Cutout) */}
+                <div
+                  className="relative w-full aspect-[4/5] overflow-hidden"
+                  style={{
+                    maskImage:
+                      "linear-gradient(to bottom, black 80%, transparent 100%)",
+                    WebkitMaskImage:
+                      "linear-gradient(to bottom, black 80%, transparent 100%)",
+                  }}
+                >
                   <CursorReveal
-                    radius={135}
-                    className="w-full h-full"
+                    radius={80}
+                    className="w-full h-full translate-y-8 md:translate-y-10"
                   />
                 </div>
 

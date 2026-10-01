@@ -61,21 +61,22 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none transition-colors duration-300">
       <nav
         aria-label="Main Navigation"
-        className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between md:justify-center relative"
+        className="max-w-7xl mx-auto px-6 py-4 md:py-5 flex items-center justify-between md:justify-center relative"
       >
         {/* Mobile Header: Brand Emblem + Hamburger */}
         <div className="flex md:hidden items-center justify-between w-full pointer-events-auto">
-          <Link href={homeHref} className="flex items-center gap-2">
-            <div className="relative w-9 h-9">
+          <Link href={homeHref} className="flex items-center gap-3">
+            <div className="relative w-12 h-12">
               <Image
                 src={emblemSrc}
                 alt={isEng ? "Engineer Emblem" : "Studio Emblem"}
                 fill
-                sizes="36px"
+                sizes="96px"
+                quality={100}
                 className={`object-contain transition-transform duration-300 ${
                   isEng
-                    ? "filter drop-shadow-[0_0_8px_#00FF9C]"
-                    : "filter drop-shadow-[0_2px_8px_rgba(200,16,46,0.3)]"
+                    ? "filter drop-shadow-[0_0_12px_rgba(0,255,156,0.6)] brightness-110"
+                    : "filter drop-shadow-[0_2px_12px_rgba(200,16,46,0.35)] contrast-105"
                 }`}
                 priority
               />
@@ -103,9 +104,9 @@ export function Header() {
         </div>
 
         {/* Desktop Balanced 5-Part Navigation Bar (Background: none, sits over hero portrait) */}
-        <div className="hidden md:flex items-center gap-10 pointer-events-auto select-none">
+        <div className="hidden md:flex items-center gap-12 lg:gap-16 pointer-events-auto select-none">
           {/* LEFT NAV ITEMS */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-8 lg:gap-10">
             {leftNav.map((item) => {
               const active = isLinkActive(item.href);
               return (
@@ -140,34 +141,34 @@ export function Header() {
             })}
           </div>
 
-          {/* CENTER EMBLEM (~15-20% larger than nav text: 40px) */}
-          <MagneticWrapper strength={0.35}>
-            <Link
-              href={homeHref}
-              aria-label={isEng ? "Chris Engineer Home" : "The Red Studios Home"}
-              className="relative group block mx-3"
+          {/* CENTER EMBLEM (Enlarged & static high-clarity anchor, not attracted to cursor) */}
+          <Link
+            href={homeHref}
+            data-no-magnetic="true"
+            aria-label={isEng ? "Chris Engineer Home" : "The Red Studios Home"}
+            className="relative group block mx-4 lg:mx-8"
+          >
+            <div
+              className="relative w-16 h-16 lg:w-20 lg:h-20 transition-transform duration-300 group-hover:scale-105 flex items-center justify-center"
             >
-              <div
-                className={`relative w-10 h-10 transition-transform duration-300 group-hover:scale-110 flex items-center justify-center`}
-              >
-                <Image
-                  src={emblemSrc}
-                  alt={isEng ? "Engineer Emblem" : "Studio Emblem"}
-                  fill
-                  sizes="40px"
-                  className={`object-contain ${
-                    isEng
-                      ? "filter drop-shadow-[0_0_10px_#00FF9C]"
-                      : "filter drop-shadow-[0_2px_10px_rgba(200,16,46,0.35)]"
-                  }`}
-                  priority
-                />
-              </div>
-            </Link>
-          </MagneticWrapper>
+              <Image
+                src={emblemSrc}
+                alt={isEng ? "Engineer Emblem" : "Studio Emblem"}
+                fill
+                sizes="(max-width: 768px) 64px, 160px"
+                quality={100}
+                className={`object-contain transition-all duration-300 ${
+                  isEng
+                    ? "filter drop-shadow-[0_0_16px_rgba(0,255,156,0.5)] brightness-110 contrast-105"
+                    : "filter drop-shadow-[0_4px_16px_rgba(200,16,46,0.3)] brightness-105 contrast-105"
+                }`}
+                priority
+              />
+            </div>
+          </Link>
 
           {/* RIGHT NAV ITEMS */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-8 lg:gap-10">
             {rightNav.map((item) => {
               const active = isLinkActive(item.href);
               return (

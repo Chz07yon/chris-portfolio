@@ -29,9 +29,9 @@ export function CustomCursor() {
       mouse.current.y = e.clientY;
       if (!isVisible) setIsVisible(true);
 
-      // Check proximity to magnetic targets
+      // Check proximity to magnetic targets (excluding elements marked with data-no-magnetic)
       const magneticEls = document.querySelectorAll<HTMLElement>(
-        '[data-magnetic="true"], button, a, [role="button"]'
+        '[data-magnetic="true"], button:not([data-no-magnetic="true"]):not([data-no-magnetic="true"] *), a:not([data-no-magnetic="true"]):not([data-no-magnetic="true"] *), [role="button"]:not([data-no-magnetic="true"])'
       );
 
       let closest: { dist: number; cx: number; cy: number } | null = null;

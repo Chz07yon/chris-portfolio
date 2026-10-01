@@ -11,7 +11,7 @@ interface CursorRevealProps {
   portraitAltSrc?: string;
   patternSrc?: string;
   patternMobileSrc?: string;
-  radius?: number; // default ~130px
+  radius?: number; // default ~80px
 }
 
 function subscribeToTouch(callback: () => void) {
@@ -34,16 +34,17 @@ export function CursorReveal({
   portraitAltSrc,
   patternSrc,
   patternMobileSrc,
-  radius = 130,
+  radius = 80,
 }: CursorRevealProps) {
   const { mode } = useTheme();
   const isEng = mode === "engineer";
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const rimRef = useRef<HTMLDivElement>(null);
+  const layer2Ref = useRef<HTMLDivElement>(null);
+  const layer3Ref = useRef<HTMLDivElement>(null);
+  const layer4Ref = useRef<HTMLDivElement>(null);
 
   const [isActive, setIsActive] = useState(false);
-  const [currentRadius, setCurrentRadius] = useState(radius);
   const isTouchDevice = useSyncExternalStore(
     subscribeToTouch,
     getTouchSnapshot,
@@ -57,8 +58,8 @@ export function CursorReveal({
     portraitAltSrc ||
     portraitSrc ||
     (isEng
-      ? "/assets/engineer/engineer-portrait.png"
-      : "/assets/studio/studio-portrait.png");
+      ? "/assets/engineer/engineer-portrait-neon.png"
+      : "/assets/studio/studio-portrait-mandala.png");
 
   const patternDesktop =
     patternSrc ||
@@ -72,6 +73,78 @@ export function CursorReveal({
       ? "/assets/engineer/engineer-circuit-layer-mobile.png"
       : "/assets/studio/studio-mandala-layer-mobile.png");
 
+  const hitCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const hitCtxRef = useRef<CanvasRenderingContext2D | null>(null);
+
+  // Pre-render portrait silhouette on a low-res offscreen canvas for instantaneous alpha hit-testing
+  useEffect(() => {
+    if (!portraitDesktop || typeof window === "undefined") return;
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.src = portraitDesktop;
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 160;
+      canvas.height = Math.round(160 * (img.naturalHeight / (img.naturalWidth || 1)));
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      if (ctx) {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        hitCanvasRef.current = canvas;
+        hitCtxRef.current = ctx;
+      }
+    };
+  }, [portraitDesktop]);
+
+  const checkIsOnPortrait = (x: number, y: number): boolean => {
+    const canvas = hitCanvasRef.current;
+    const ctx = hitCtxRef.current;
+    const container = containerRef.current;
+    if (!canvas || !ctx || !container) return false;
+
+    const bRect = container.getBoundingClientRect();
+    const contW = bRect.width;
+    const contH = bRect.height;
+    if (contW <= 0 || contH <= 0) return false;
+
+    const imgAspect = canvas.width / canvas.height;
+    const contAspect = contW / contH;
+
+    let renderW = contW;
+    let renderH = contH;
+    let renderLeft = 0;
+    let renderTop = 0;
+
+    // Matches object-contain object-bottom
+    if (contAspect > imgAspect) {
+      renderH = contH;
+      renderW = contH * imgAspect;
+      renderLeft = (contW - renderW) / 2;
+      renderTop = 0;
+    } else {
+      renderW = contW;
+      renderH = contW / imgAspect;
+      renderLeft = 0;
+      renderTop = contH - renderH;
+    }
+
+    if (x < renderLeft || x > renderLeft + renderW || y < renderTop || y > renderTop + renderH) {
+      return false;
+    }
+
+    const normX = (x - renderLeft) / renderW;
+    const normY = (y - renderTop) / renderH;
+
+    const px = Math.min(canvas.width - 1, Math.max(0, Math.floor(normX * canvas.width)));
+    const py = Math.min(canvas.height - 1, Math.max(0, Math.floor(normY * canvas.height)));
+
+    try {
+      const pixel = ctx.getImageData(px, py, 1, 1).data;
+      return pixel[3] > 25; // alpha > 25 indicates cursor is over actual portrait pixels
+    } catch {
+      return false;
+    }
+  };
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -81,14 +154,10 @@ export function CursorReveal({
     let targetY = 0;
     let currentX = 0;
     let currentY = 0;
-    let isInside = false;
 
-    const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isLowPower =
-      isReducedMotion ||
-      (typeof navigator !== "undefined" &&
-        navigator.hardwareConcurrency &&
-        navigator.hardwareConcurrency < 4);
+    // Smooth exposure interpolation (0 = fully unrevealed solid portrait, 1 = fully revealed)
+    let targetExposure = 0;
+    let currentExposure = 0;
 
     // Center by default if not yet hovered
     const rect = container.getBoundingClientRect();
@@ -97,57 +166,93 @@ export function CursorReveal({
     targetX = currentX;
     targetY = currentY;
 
-    const applyPositionDirect = (x: number, y: number) => {
+    const updatePosition = () => {
+      // Smooth tracking interpolation for coordinates
+      const easePos = 0.20;
+      currentX += (targetX - currentX) * easePos;
+      currentY += (targetY - currentY) * easePos;
+
+      // Smooth gradual ease for aperture exposure bloom and dissolve
+      const easeExp = targetExposure > currentExposure ? 0.08 : 0.09;
+      currentExposure += (targetExposure - currentExposure) * easeExp;
+
+      if (currentExposure < 0.003 && targetExposure === 0) {
+        currentExposure = 0;
+      }
+
+      const effectiveRadius = currentExposure * radius;
+      const x = currentX.toFixed(1);
+      const y = currentY.toFixed(1);
+      const r = effectiveRadius.toFixed(1);
+
       container.style.setProperty("--xray-x", `${x}px`);
       container.style.setProperty("--xray-y", `${y}px`);
-      if (rimRef.current) {
-        rimRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+
+      // Layer 2: Smooth opacity crossfade & aperture mask (Balanced at ~75% peak intensity)
+      if (layer2Ref.current) {
+        layer2Ref.current.style.opacity = `${(currentExposure * 0.75).toFixed(3)}`;
+        if (currentExposure > 0.005) {
+          const mask = `radial-gradient(circle ${r}px at ${x}px ${y}px, black 0%, black 50%, transparent 100%)`;
+          layer2Ref.current.style.maskImage = mask;
+          layer2Ref.current.style.webkitMaskImage = mask;
+        }
       }
-    };
 
-    const updatePosition = () => {
-      // Smooth interpolation for fluid rim tracking
-      const ease = 0.22;
-      currentX += (targetX - currentX) * ease;
-      currentY += (targetY - currentY) * ease;
+      // Layer 3: Glowing ghost outline silhouette (Radiates behind pattern layer at z-15)
+      if (layer3Ref.current) {
+        layer3Ref.current.style.opacity = `${(currentExposure * 0.45).toFixed(3)}`;
+        if (currentExposure > 0.005) {
+          const mask = `radial-gradient(circle ${r}px at ${x}px ${y}px, black 0%, black 55%, transparent 100%)`;
+          layer3Ref.current.style.maskImage = mask;
+          layer3Ref.current.style.webkitMaskImage = mask;
+        }
+      }
 
-      applyPositionDirect(currentX, currentY);
+      // Layer 4: Solid portrait cutout with liquid feathered aperture (Retains ~28% portrait so it never completely vanishes)
+      if (layer4Ref.current) {
+        if (currentExposure <= 0.005) {
+          layer4Ref.current.style.maskImage = "none";
+          layer4Ref.current.style.webkitMaskImage = "none";
+        } else {
+          // Retain ~28% portrait visibility at maximum reveal aperture
+          const minAlpha = (1 - currentExposure * 0.72).toFixed(2);
+          const featherStart = (effectiveRadius * 0.4).toFixed(1);
+          const mask = `radial-gradient(circle ${r}px at ${x}px ${y}px, rgba(0,0,0,${minAlpha}) 0px, rgba(0,0,0,${minAlpha}) ${featherStart}px, rgba(0,0,0,1) ${r}px)`;
+          layer4Ref.current.style.maskImage = mask;
+          layer4Ref.current.style.webkitMaskImage = mask;
+        }
+      }
 
       rafId = requestAnimationFrame(updatePosition);
     };
 
-    if (!isLowPower) {
-      rafId = requestAnimationFrame(updatePosition);
-    } else {
-      applyPositionDirect(currentX, currentY);
-    }
+    rafId = requestAnimationFrame(updatePosition);
 
     const handleMouseMove = (e: MouseEvent) => {
       const bRect = container.getBoundingClientRect();
       targetX = e.clientX - bRect.left;
       targetY = e.clientY - bRect.top;
-      if (!isInside) {
-        isInside = true;
-        setCurrentRadius(radius);
-        setIsActive(true);
-      }
-      if (isLowPower) {
-        applyPositionDirect(targetX, targetY);
-      }
+
+      const onPortrait = checkIsOnPortrait(targetX, targetY);
+      targetExposure = onPortrait ? 1 : 0;
+      setIsActive(onPortrait);
     };
 
-    const handleMouseEnter = () => {
-      isInside = true;
-      setCurrentRadius(radius);
-      setIsActive(true);
+    const handleMouseEnter = (e: MouseEvent) => {
+      const bRect = container.getBoundingClientRect();
+      targetX = e.clientX - bRect.left;
+      targetY = e.clientY - bRect.top;
+      const onPortrait = checkIsOnPortrait(targetX, targetY);
+      targetExposure = onPortrait ? 1 : 0;
+      setIsActive(onPortrait);
     };
 
     const handleMouseLeave = () => {
-      isInside = false;
+      targetExposure = 0;
       setIsActive(false);
     };
 
-    // Mobile: Tap-and-hold triggers reveal at touch point, spreading outward and auto-fading after ~1.5s
+    // Mobile: Tap-and-hold triggers reveal at touch point only if touching the portrait
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length > 0) {
         const touch = e.touches[0];
@@ -157,23 +262,20 @@ export function CursorReveal({
         currentX = targetX;
         currentY = targetY;
 
-        if (isLowPower) {
-          applyPositionDirect(targetX, targetY);
+        const onPortrait = checkIsOnPortrait(targetX, targetY);
+        if (!onPortrait) {
+          targetExposure = 0;
+          setIsActive(false);
+          return;
         }
 
-        // Spread radius slightly outward on touch
-        setCurrentRadius(radius * 0.85);
+        targetExposure = 1;
         setIsActive(true);
 
-        if (!isReducedMotion) {
-          setTimeout(() => {
-            setCurrentRadius(radius * 1.15);
-          }, 50);
-        }
-
         if (touchTimerRef.current) clearTimeout(touchTimerRef.current);
-        // Auto-fade after exactly ~1.5s
+        // Auto-fade smoothly after ~1.5s
         touchTimerRef.current = setTimeout(() => {
+          targetExposure = 0;
           setIsActive(false);
         }, 1500);
       }
@@ -185,23 +287,25 @@ export function CursorReveal({
         const bRect = container.getBoundingClientRect();
         targetX = touch.clientX - bRect.left;
         targetY = touch.clientY - bRect.top;
-        if (isLowPower) {
-          applyPositionDirect(targetX, targetY);
-        }
+
+        const onPortrait = checkIsOnPortrait(targetX, targetY);
+        targetExposure = onPortrait ? 1 : 0;
+        setIsActive(onPortrait);
       }
     };
 
     const handleTouchEnd = () => {
       if (touchTimerRef.current) clearTimeout(touchTimerRef.current);
       touchTimerRef.current = setTimeout(() => {
+        targetExposure = 0;
         setIsActive(false);
-      }, 1500);
+      }, 1000);
     };
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
         cancelAnimationFrame(rafId);
-      } else if (!isLowPower) {
+      } else {
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(updatePosition);
       }
@@ -226,7 +330,7 @@ export function CursorReveal({
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (touchTimerRef.current) clearTimeout(touchTimerRef.current);
     };
-  }, [radius]);
+  }, [radius, portraitDesktop]);
 
   return (
     <div
@@ -234,14 +338,14 @@ export function CursorReveal({
       className={`relative select-none overflow-hidden ${className}`}
       style={
         {
-          "--xray-radius": `${currentRadius}px`,
+          "--xray-radius": "0px",
           "--xray-x": "50%",
           "--xray-y": "50%",
         } as React.CSSProperties
       }
     >
       {/* LAYER 1: Base Portrait at ~15% opacity (Revealed during X-Ray) */}
-      <div className="absolute inset-0 z-10 opacity-15 transition-opacity duration-300 pointer-events-none">
+      <div className="absolute inset-0 z-10 opacity-15 pointer-events-none">
         <picture className="w-full h-full block">
           <source media="(max-width: 767px)" srcSet={portraitDesktop} />
           <Image
@@ -255,47 +359,17 @@ export function CursorReveal({
         </picture>
       </div>
 
-      {/* LAYER 2: Hidden Pattern Layer (Circuit Traces / Sacred Mandala) */}
+      {/* LAYER 3: Ambient Glowing Ghost-Outline Silhouette (Radiating behind the pattern layer) */}
       <div
-        className="absolute inset-0 z-20 pointer-events-none transition-opacity duration-300"
-        style={{
-          opacity: isActive ? 0.95 : 0,
-          maskImage: `radial-gradient(circle var(--xray-radius) at var(--xray-x) var(--xray-y), black 0%, black 50%, transparent 100%)`,
-          WebkitMaskImage: `radial-gradient(circle var(--xray-radius) at var(--xray-x) var(--xray-y), black 0%, black 50%, transparent 100%)`,
-          transition: "opacity 0.3s ease, mask-size 0.3s ease",
-        }}
-      >
-        <picture className="w-full h-full block">
-          <source media="(max-width: 767px)" srcSet={patternMobile} />
-          <Image
-            src={patternDesktop}
-            alt={isEng ? "Circuit Pattern Reveal" : "Mandala Pattern Reveal"}
-            fill
-            sizes="(max-width: 768px) 100vw, 60vw"
-            className={`object-cover object-center ${
-              isEng
-                ? "brightness-125 contrast-125"
-                : "brightness-110 contrast-115"
-            }`}
-            priority
-          />
-        </picture>
-      </div>
-
-      {/* LAYER 3: Faint Glowing Ghost-Outline Silhouette inside circle */}
-      <div
-        className="absolute inset-0 z-25 pointer-events-none transition-opacity duration-300"
-        style={{
-          opacity: isActive ? 0.65 : 0,
-          maskImage: `radial-gradient(circle var(--xray-radius) at var(--xray-x) var(--xray-y), black 0%, black 55%, transparent 100%)`,
-          WebkitMaskImage: `radial-gradient(circle var(--xray-radius) at var(--xray-x) var(--xray-y), black 0%, black 55%, transparent 100%)`,
-        }}
+        ref={layer3Ref}
+        className="absolute inset-0 z-15 pointer-events-none"
+        style={{ opacity: 0 }}
       >
         <div
           className={`w-full h-full ${
             isEng
-              ? "filter drop-shadow(0 0 16px #00FF9C) brightness-150"
-              : "filter drop-shadow(0 0 16px #C8102E) drop-shadow(0 0 8px #C99A2E) brightness-125"
+              ? "filter drop-shadow(0 0 24px #00FF9C) brightness-125"
+              : "filter drop-shadow(0 0 24px #C8102E) drop-shadow(0 0 12px #C99A2E) brightness-110"
           }`}
         >
           <Image
@@ -308,17 +382,48 @@ export function CursorReveal({
         </div>
       </div>
 
-      {/* LAYER 4: Solid Portrait Cutout (Masked out at cursor position to reveal layers beneath) */}
+      {/* LAYER 2: Hidden Pattern Layer (Circuit Traces / Sacred Mandala) - Masked strictly to Portrait Silhouette with high contrast & vivid saturation */}
       <div
+        ref={layer2Ref}
+        className="absolute inset-0 z-25 pointer-events-none"
+        style={{ opacity: 0 }}
+      >
+        <div
+          className="w-full h-full"
+          style={{
+            maskImage: `url(${portraitDesktop})`,
+            WebkitMaskImage: `url(${portraitDesktop})`,
+            maskSize: "contain",
+            WebkitMaskSize: "contain",
+            maskPosition: "bottom",
+            WebkitMaskPosition: "bottom",
+            maskRepeat: "no-repeat",
+            WebkitMaskRepeat: "no-repeat",
+          }}
+        >
+          <picture className="w-full h-full block">
+            <source media="(max-width: 767px)" srcSet={patternMobile} />
+            <Image
+              src={patternDesktop}
+              alt={isEng ? "Circuit Pattern Reveal" : "Mandala Pattern Reveal"}
+              fill
+              sizes="(max-width: 768px) 100vw, 60vw"
+              className="object-cover object-center"
+              style={{
+                filter: isEng
+                  ? "contrast(1.45) saturate(1.4) brightness(1.08)"
+                  : "contrast(1.4) saturate(1.35) brightness(1.02)",
+              }}
+              priority
+            />
+          </picture>
+        </div>
+      </div>
+
+      {/* LAYER 4: Solid Portrait Cutout (Smoothly apertures open/close) */}
+      <div
+        ref={layer4Ref}
         className="absolute inset-0 z-30 pointer-events-none"
-        style={{
-          maskImage: isActive
-            ? `radial-gradient(circle var(--xray-radius) at var(--xray-x) var(--xray-y), transparent 0%, transparent 45%, black 100%)`
-            : "none",
-          WebkitMaskImage: isActive
-            ? `radial-gradient(circle var(--xray-radius) at var(--xray-x) var(--xray-y), transparent 0%, transparent 45%, black 100%)`
-            : "none",
-        }}
       >
         <picture className="w-full h-full block">
           <source media="(max-width: 767px)" srcSet={portraitDesktop} />
@@ -331,62 +436,6 @@ export function CursorReveal({
             priority
           />
         </picture>
-      </div>
-
-      {/* LAYER 5: Soft Gradient Rim & Spark on Circle Edge */}
-      <div
-        ref={rimRef}
-        className="pointer-events-none absolute top-0 left-0 z-40 rounded-full transition-all duration-300 flex items-center justify-center"
-        style={{
-          width: `${currentRadius * 2}px`,
-          height: `${currentRadius * 2}px`,
-          opacity: isActive ? 1 : 0,
-        }}
-      >
-        {isEng ? (
-          // Engineer: Green -> Transparent with Gold Spark
-          <div className="relative w-full h-full rounded-full">
-            <div className="absolute inset-0 rounded-full border-[1.5px] border-[#00FF9C] shadow-[0_0_24px_rgba(0,255,156,0.6),inset_0_0_20px_rgba(0,255,156,0.25)] opacity-85" />
-            <div
-              className="absolute inset-[-4px] rounded-full"
-              style={{
-                background:
-                  "radial-gradient(circle, transparent 65%, rgba(0,255,156,0.2) 85%, transparent 100%)",
-              }}
-            />
-            {/* Orbiting Gold Spark */}
-            <div
-              className="absolute w-2 h-2 rounded-full bg-[#FFC900] shadow-[0_0_10px_#FFC900] animate-spin motion-reduce:animate-none"
-              style={{
-                top: "10%",
-                right: "15%",
-                animationDuration: "4s",
-              }}
-            />
-          </div>
-        ) : (
-          // Studio: Red -> Gold -> Transparent
-          <div className="relative w-full h-full rounded-full">
-            <div className="absolute inset-0 rounded-full border-[1.5px] border-[#C8102E] shadow-[0_0_24px_rgba(200,16,46,0.5),inset_0_0_20px_rgba(201,154,46,0.2)] opacity-85" />
-            <div className="absolute inset-[3px] rounded-full border border-[#C99A2E]/40" />
-            <div
-              className="absolute inset-[-4px] rounded-full"
-              style={{
-                background:
-                  "radial-gradient(circle, transparent 65%, rgba(200,16,46,0.2) 82%, rgba(201,154,46,0.3) 94%, transparent 100%)",
-              }}
-            />
-            {/* Orbiting Gold Spark */}
-            <div
-              className="absolute w-2 h-2 rounded-full bg-[#C99A2E] shadow-[0_0_10px_#C99A2E] animate-spin motion-reduce:animate-none"
-              style={{
-                bottom: "12%",
-                left: "14%",
-                animationDuration: "6s",
-              }}
-            />
-          </div>
-        )}
       </div>
 
       {/* Tap-and-hold visual hint for touch devices */}

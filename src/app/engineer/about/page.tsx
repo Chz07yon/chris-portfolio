@@ -43,16 +43,22 @@ export default function EngineerAboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center p-8 md:p-12 bg-[#0A1210]/80 border border-[#12261F] shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
             {/* LEFT: Portrait Shot */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-xs aspect-[4/5] bg-[#050807] border border-[#12261F] overflow-hidden group">
+              <div
+                className="relative w-full max-w-xs aspect-[4/5] overflow-hidden group"
+                style={{
+                  maskImage:
+                    "radial-gradient(ellipse 96% 92% at 50% 50%, black 50%, transparent 95%)",
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse 96% 92% at 50% 50%, black 50%, transparent 95%)",
+                }}
+              >
+                {/* Soft backdrop inside the mask */}
+                <div className="absolute inset-0 bg-[#050807]/70 pointer-events-none" />
+
                 {/* Reticle Marks */}
-                <div className="absolute top-2 left-2 z-20 text-[9px] font-mono text-[#00FF9C] bg-[#050807]/90 px-1.5 py-0.5 border border-[#12261F]">
-                  ID: CHRIS_07
-                </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-[#00FF9C]" />
-                <div className="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-[#00FF9C]" />
 
                 <Image
-                  src="/assets/engineer/engineer-portrait.png"
+                  src="/assets/engineer/engineer-portrait-neon.png"
                   alt="Chris — Engineer & Creative Director"
                   fill
                   sizes="(max-width: 768px) 100vw, 320px"

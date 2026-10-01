@@ -17,8 +17,16 @@ export default function EngineerHomePage() {
     <main className="min-h-screen relative overflow-hidden bg-[#050807] text-[#E8F5EF]">
       {/* FULL-VIEWPORT HERO SECTION */}
       <section className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-between pt-4 pb-16 px-6 max-w-7xl mx-auto z-10">
-        {/* HERO BACKGROUND: Responsive Desktop / Mobile Asset */}
-        <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
+        {/* HERO BACKGROUND: Responsive Desktop / Mobile Asset with Faded Edges */}
+        <div
+          className="absolute inset-0 pointer-events-none -z-10 overflow-hidden"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 52% 48% at 50% 50%, #000 20%, rgba(0, 0, 0, 0.85) 45%, rgba(0, 0, 0, 0.25) 70%, transparent 92%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 52% 48% at 50% 50%, #000 20%, rgba(0, 0, 0, 0.85) 45%, rgba(0, 0, 0, 0.25) 70%, transparent 92%)",
+          }}
+        >
           <picture className="w-full h-full block opacity-30 mix-blend-screen">
             <source media="(max-width: 767px)" srcSet="/assets/engineer/engineer-bg-mobile.png" />
             <Image
@@ -31,7 +39,8 @@ export default function EngineerHomePage() {
             />
           </picture>
           <div className="absolute inset-0 bg-tech-grid opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#050807]/20 via-transparent to-[#050807]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050807] via-transparent to-[#050807]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#050807] via-transparent to-[#050807]" />
         </div>
 
         {/* HERO MAIN CONTENT GRID */}
@@ -101,29 +110,29 @@ export default function EngineerHomePage() {
           <div className="lg:col-span-5 flex justify-center order-1 lg:order-2">
             <ScrollReveal direction="left" delay={0.25} className="w-full max-w-sm sm:max-w-md">
               <div className="relative group">
-                {/* Technical Corner Brackets */}
-                <div className="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-[#00FF9C]" />
-                <div className="absolute -top-3 -right-3 w-6 h-6 border-t-2 border-r-2 border-[#00FF9C]" />
-                <div className="absolute -bottom-3 -left-3 w-6 h-6 border-b-2 border-l-2 border-[#00FF9C]" />
-                <div className="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-[#00FF9C]" />
+                {/* Soft Engineer Ambient Glow Halo */}
+                <div className="absolute -inset-6 bg-gradient-to-tr from-[#00FF9C]/20 via-[#00FF9C]/10 to-transparent rounded-full blur-3xl -z-10 pointer-events-none" />
 
-                {/* Technical Coordinates Badge */}
-                <div className="absolute top-4 left-4 z-40 px-2 py-1 bg-[#050807]/85 border border-[#12261F] text-[10px] font-mono text-[#00FF9C]">
-                  XRAY_INSPECT: 60FPS TRACKED
-                </div>
-
-                {/* CURSOR REVEAL PORTRAIT EXHIBITION (Vertical Anchor) */}
-                <div className="w-full aspect-[4/5] bg-[#0A1210] border border-[#12261F] shadow-[0_15px_50px_rgba(0,0,0,0.85)]">
+                {/* CURSOR REVEAL PORTRAIT EXHIBITION (Seamless Floating Cutout) */}
+                <div
+                  className="relative w-full aspect-[4/5] overflow-hidden"
+                  style={{
+                    maskImage:
+                      "linear-gradient(to bottom, black 80%, transparent 100%)",
+                    WebkitMaskImage:
+                      "linear-gradient(to bottom, black 80%, transparent 100%)",
+                  }}
+                >
                   <CursorReveal
-                    radius={135}
-                    className="w-full h-full"
+                    radius={80}
+                    className="w-full h-full translate-y-8 md:translate-y-10"
                   />
                 </div>
 
                 {/* Mobile / Desktop Inspection Cue */}
                 <div className="mt-3 flex items-center justify-between text-[11px] font-mono text-[#7C9A8E]">
                   <span>HOVER / TOUCH PORTRAIT TO INSPECT CIRCUITS</span>
-                  <span className="text-[#00FF9C]">MASK: 135PX</span>
+                  <span className="text-[#00FF9C]">MASK: 80PX</span>
                 </div>
               </div>
             </ScrollReveal>
@@ -167,9 +176,9 @@ export default function EngineerHomePage() {
                 <Cpu className="w-5 h-5" />
               </div>
               <div className="text-xs font-mono text-[#00FF9C] mb-1">01 / HARDWARE</div>
-              <h3 className="text-lg font-bold text-[#E8F5EF] mb-2">PCB Layout &amp; Signal Integrity</h3>
+              <h3 className="text-lg font-bold text-[#E8F5EF] mb-2">Circuit Design & Analysis</h3>
               <p className="text-xs text-[#7C9A8E] leading-relaxed">
-                Multi-layer impedance matched high-speed routing, RF considerations, thermal dissipation, and precision fabrication standards.
+                Multi-layer impedance matched high-speed routing, thermal dissipation and precision fabric ation standards.
               </p>
             </div>
           </StaggerItem>
@@ -180,7 +189,7 @@ export default function EngineerHomePage() {
                 <Layers className="w-5 h-5" />
               </div>
               <div className="text-xs font-mono text-[#00FF9C] mb-1">02 / FIRMWARE</div>
-              <h3 className="text-lg font-bold text-[#E8F5EF] mb-2">Embedded Systems &amp; RTOS</h3>
+              <h3 className="text-lg font-bold text-[#E8F5EF] mb-2">Embedded Systems, Protocols, IDE</h3>
               <p className="text-xs text-[#7C9A8E] leading-relaxed">
                 Bare-metal C/C++, ARM Cortex microcontrollers, low-power state transitions, bus protocols (SPI, I2C, CAN, UART), and driver design.
               </p>
@@ -193,7 +202,7 @@ export default function EngineerHomePage() {
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div className="text-xs font-mono text-[#00FF9C] mb-1">03 / PROTOTYPING</div>
-              <h3 className="text-lg font-bold text-[#E8F5EF] mb-2">Testing &amp; Rapid Diagnostics</h3>
+              <h3 className="text-lg font-bold text-[#E8F5EF] mb-2">Testing, Analysis &amp; Diagnostic</h3>
               <p className="text-xs text-[#7C9A8E] leading-relaxed">
                 Oscilloscope signal debugging, logic analyzers, bench power analysis, and rapid turn-around physical prototype validation.
               </p>

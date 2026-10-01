@@ -48,12 +48,23 @@ export default function StudioAboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center p-8 md:p-12 bg-[#FFFAF2] border border-[#E5D5C2] rounded-3xl shadow-[0_20px_60px_rgba(58,10,16,0.08)]">
             {/* LEFT: Portrait Shot */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-xs aspect-[4/5] bg-[#F6EFE4] border border-[#E5D5C2] rounded-2xl overflow-hidden shadow-xl group">
-                <div className="absolute top-3 left-3 z-20 text-[10px] tracking-wide text-[#C8102E] font-medium bg-[#FFFAF2]/90 px-2.5 py-0.5 rounded-full border border-[#E5D5C2]">
+              <div
+                className="relative w-full max-w-xs aspect-[4/5] rounded-2xl overflow-hidden shadow-xl group"
+                style={{
+                  maskImage:
+                    "radial-gradient(ellipse 96% 92% at 50% 50%, black 50%, transparent 95%)",
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse 96% 92% at 50% 50%, black 50%, transparent 95%)",
+                }}
+              >
+                {/* Soft backdrop inside the mask */}
+                <div className="absolute inset-0 bg-[#F6EFE4]/80 pointer-events-none" />
+
+                <div className="absolute top-3 left-3 z-20 text-[10px] tracking-wide text-[#C8102E] font-medium bg-[#FFFAF2]/90 px-2.5 py-0.5 rounded-full border border-[#E5D5C2]/60">
                   STUDIO ARCHIVE
                 </div>
                 <Image
-                  src="/assets/studio/studio-portrait.png"
+                  src="/assets/studio/studio-portrait-mandala.png"
                   alt="Chris — The Red Studios"
                   fill
                   sizes="(max-width: 768px) 100vw, 320px"
