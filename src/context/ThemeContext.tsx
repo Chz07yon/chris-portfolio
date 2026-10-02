@@ -5,9 +5,11 @@ import { usePathname, useRouter } from "next/navigation";
 
 export type WorldMode = "engineer" | "studio";
 
+export type WorldSwitchPhase = "idle" | "dim" | "emblem" | "reveal" | "settle";
+
 export interface WorldSwitchState {
   isSwitching: boolean;
-  phase: "closing" | "opening" | "idle";
+  phase: WorldSwitchPhase;
   fromMode: WorldMode;
   toMode: WorldMode;
   origin: { x: number; y: number };
@@ -72,7 +74,16 @@ export function ThemeProvider({
     origin: { x: 500, y: 700 },
   });
 
-  const switchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timersRef = useRef<NodeJS.Timeout[]>([]);
+
+  const clearAllTimers = () => {
+    timersRef.current.forEach((t) => clearTimeout(t));
+    timersRef.current = [];
+  };
+
+  useEffect(() => {
+    return () => clearAllTimers();
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", activeMode);
@@ -90,7 +101,7 @@ export function ThemeProvider({
       if (currentPath.startsWith("/engineer/works")) return "/studio/works";
       if (currentPath.startsWith("/engineer/about")) return "/studio/about";
       if (currentPath.startsWith("/engineer/journey")) return "/studio/journey";
-      if (currentPath.startsWith("/engineer/certification")) return "/studio/designs";
+      if (currentPath.startsWith("/engineer/certification") || currentPath.startsWith("/engineer/certifications")) return "/studio/designs";
       return "/studio";
     } else {
       if (currentPath === "/studio" || currentPath === "/") return "/engineer";
@@ -114,8 +125,12 @@ export function ThemeProvider({
     };
     const pillOrigin = origin || defaultOrigin;
 
+    clearAllTimers();
+
+    // ACCESSIBILITY: respect prefers-reduced-motion
+    // Skip steps 1 and 3 entirely, do a flat 200ms crossfade + instant route/variable swap instead.
+    // The flash step (step 1) must NEVER play for reduced-motion users (photosensitivity trigger).
     if (isReducedMotion) {
-      // Reduced motion: instantaneous route change + 200ms crossfade
       setPreferredMode(targetMode);
       document.documentElement.setAttribute("data-theme", targetMode);
       try {
@@ -123,46 +138,83 @@ export function ThemeProvider({
       } catch {}
       const targetRoute = getMappedRoute(targetMode, pathname || "/");
       router.push(targetRoute);
-      return;
-    }
 
-    if (switchTimeoutRef.current) clearTimeout(switchTimeoutRef.current);
+      setWorldSwitchState({
+        isSwitching: true,
+        phase: "settle",
+        fromMode: activeMode,
+        toMode: targetMode,
+        origin: pillOrigin,
+      });
 
-    // 1. Phase 1: Closing iris outward from pill screen position (0 - 400ms)
-    setWorldSwitchState({
-      isSwitching: true,
-      phase: "closing",
-      fromMode: activeMode,
-      toMode: targetMode,
-      origin: pillOrigin,
-    });
-
-    // 2. Midpoint (at exactly 400ms): Fully closed, swap CSS variables, storage & route invisibly
-    switchTimeoutRef.current = setTimeout(() => {
-      document.documentElement.setAttribute("data-theme", targetMode);
-      setPreferredMode(targetMode);
-      try {
-        localStorage.setItem(STORAGE_KEY, targetMode);
-      } catch {}
-
-      const targetRoute = getMappedRoute(targetMode, pathname || "/");
-      router.push(targetRoute);
-
-      // Phase 2: Opening iris with focus-pull or circuit/scanline sweep (400ms - 800ms)
-      setWorldSwitchState((prev) => ({
-        ...prev,
-        phase: "opening",
-      }));
-
-      // Complete transition at 800ms
-      setTimeout(() => {
+      const tReduced = setTimeout(() => {
         setWorldSwitchState((prev) => ({
           ...prev,
           isSwitching: false,
           phase: "idle",
         }));
-      }, 420);
-    }, 400);
+      }, 200);
+      timersRef.current.push(tReduced);
+      return;
+    }
+
+    // PHASE 7: EMBLEM MATERIALIZE SEQUENCE (v2) (~1750ms total, deliberate, smooth & cinematic)
+
+    // 1. DIM (0-300ms): semi-black overlay fades in gently over current page (opacity 0 -> ~0.6)
+    setWorldSwitchState({
+      isSwitching: true,
+      phase: "dim",
+      fromMode: activeMode,
+      toMode: targetMode,
+      origin: pillOrigin,
+    });
+
+    // 2. EMBLEM APPEARS (300-700ms): destination emblem fades + scales in smoothly at screen center (~140px), holds ~150ms
+    const tStep2 = setTimeout(() => {
+      setWorldSwitchState((prev) => ({
+        ...prev,
+        phase: "emblem",
+      }));
+
+      // 3. EMBLEM-DRIVEN REVEAL (700-1400ms):
+      // Route change + CSS variables + localStorage swap happen at START of step 3 (700ms)
+      const tStep3 = setTimeout(() => {
+        document.documentElement.setAttribute("data-theme", targetMode);
+        setPreferredMode(targetMode);
+        try {
+          localStorage.setItem(STORAGE_KEY, targetMode);
+        } catch {}
+
+        const targetRoute = getMappedRoute(targetMode, pathname || "/");
+        router.push(targetRoute);
+
+        setWorldSwitchState((prev) => ({
+          ...prev,
+          phase: "reveal",
+        }));
+
+        // 4. SETTLE (1400-1750ms): emblem fades out gently (opacity 1->0), dim fully clears
+        const tStep4 = setTimeout(() => {
+          setWorldSwitchState((prev) => ({
+            ...prev,
+            phase: "settle",
+          }));
+
+          // Complete transition at 1750ms
+          const tDone = setTimeout(() => {
+            setWorldSwitchState((prev) => ({
+              ...prev,
+              isSwitching: false,
+              phase: "idle",
+            }));
+          }, 350);
+          timersRef.current.push(tDone);
+        }, 700); // 700ms reveal (700ms - 1400ms)
+        timersRef.current.push(tStep4);
+      }, 400); // 300ms + 400ms = 700ms
+      timersRef.current.push(tStep3);
+    }, 300); // 0ms + 300ms = 300ms
+    timersRef.current.push(tStep2);
   };
 
   const setMode = (newMode: WorldMode) => {
