@@ -18,21 +18,37 @@ export default function StudioAboutPage() {
       />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 pt-12 md:pt-16">
-        {/* Top Breadcrumb */}
-        <ScrollReveal direction="down">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#E5D5C2] rounded-full text-xs text-[#C8102E] mb-6">
-            <Sparkles className="w-3.5 h-3.5 text-[#C99A2E]" />
-            <span>MANIFESTO // THE RED STUDIOS ARCHITECTURE</span>
+        {/* Top Breadcrumb & Center-Right Ambient Logo */}
+        <div className="relative mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <ScrollReveal direction="down" className="max-w-2xl relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#E5D5C2] rounded-full text-xs text-[#C8102E] mb-6">
+              <Sparkles className="w-3.5 h-3.5 text-[#C99A2E]" />
+              <span>MANIFESTO // THE RED STUDIOS ARCHITECTURE</span>
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E0F10] mb-4">
+              VISUAL POETRY &amp; <br />
+              <span className="text-[#C8102E] italic">DUAL-SPECTRUM</span> DESIGN.
+            </h1>
+            <p className="text-[#7A6A62] text-base md:text-lg leading-relaxed">
+              The creative agency of Chris Zeyon Pinto. Exploring the raw power of cinematic motion,
+              editorial design architecture, and rooted community storytelling.
+            </p>
+          </ScrollReveal>
+
+          {/* Logo with reduced opacity at center-right */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 md:relative md:top-auto md:translate-y-0 shrink-0 pointer-events-none select-none z-0 pr-0 md:pr-4 lg:pr-8">
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 opacity-30 md:opacity-40">
+              <Image
+                src="/assets/studio/studio-emblem.png"
+                alt="Studio Logo Emblem"
+                fill
+                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
+                className="object-contain filter drop-shadow-[0_4px_30px_rgba(200,16,46,0.3)]"
+                priority
+              />
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E0F10] mb-4">
-            VISUAL POETRY &amp; <br />
-            <span className="text-[#C8102E] italic">DUAL-SPECTRUM</span> DESIGN.
-          </h1>
-          <p className="text-[#7A6A62] text-base md:text-lg max-w-2xl leading-relaxed mb-12">
-            The creative agency of Chris Zeyon Pinto. Exploring the raw power of cinematic motion,
-            editorial design architecture, and rooted community storytelling.
-          </p>
-        </ScrollReveal>
+        </div>
 
         {/* PHOTO & BIO BLOCK WITH ANCHORED SOFT WARM GLOW */}
         <div className="relative mb-20">
@@ -45,29 +61,18 @@ export default function StudioAboutPage() {
             }}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center p-8 md:p-12 bg-[#FFFAF2] border border-[#E5D5C2] rounded-3xl shadow-[0_20px_60px_rgba(58,10,16,0.08)]">
-            {/* LEFT: Portrait Shot */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div
-                className="relative w-full max-w-xs aspect-[4/5] rounded-2xl overflow-hidden shadow-xl group"
-                style={{
-                  maskImage:
-                    "radial-gradient(ellipse 96% 92% at 50% 50%, black 50%, transparent 95%)",
-                  WebkitMaskImage:
-                    "radial-gradient(ellipse 96% 92% at 50% 50%, black 50%, transparent 95%)",
-                }}
-              >
-                {/* Soft backdrop inside the mask */}
-                <div className="absolute inset-0 bg-[#F6EFE4]/80 pointer-events-none" />
-
-                <div className="absolute top-3 left-3 z-20 text-[10px] tracking-wide text-[#C8102E] font-medium bg-[#FFFAF2]/90 px-2.5 py-0.5 rounded-full border border-[#E5D5C2]/60">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end p-8 md:p-12 pb-0 md:pb-0 bg-[#FFFAF2] border border-[#E5D5C2] rounded-3xl shadow-[0_20px_60px_rgba(58,10,16,0.08)]">
+            {/* LEFT: Portrait Shot Grounded at Card Base */}
+            <div className="lg:col-span-5 flex justify-center self-end">
+              <div className="relative w-full max-w-sm aspect-[2/3] group">
+                <div className="absolute top-0 left-0 z-20 text-[10px] tracking-wide text-[#C8102E] font-medium bg-[#FFFAF2]/90 px-2.5 py-0.5 rounded-full border border-[#E5D5C2]/60">
                   STUDIO ARCHIVE
                 </div>
                 <Image
                   src="/assets/studio/studio-portrait-mandala.png"
                   alt="Chris — The Red Studios"
                   fill
-                  sizes="(max-width: 768px) 100vw, 320px"
+                  sizes="(max-width: 768px) 100vw, 360px"
                   priority
                   className="object-contain object-bottom group-hover:scale-105 transition-transform duration-500"
                 />
@@ -75,7 +80,7 @@ export default function StudioAboutPage() {
             </div>
 
             {/* RIGHT: Biographical Narrative */}
-            <div className="lg:col-span-7 space-y-5">
+            <div className="lg:col-span-7 space-y-5 pb-8 md:pb-12">
               <div className="text-xs tracking-widest text-[#C99A2E] font-semibold uppercase">
                 {"// CREATIVE PRODUCER PROFILE"}
               </div>

@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/effects/ScrollReveal";
-import { Cpu, Terminal, Sparkles, HeartHandshake, CheckCircle2 } from "lucide-react";
+import { Cpu, Sparkles, HeartHandshake, CheckCircle2 } from "lucide-react";
 
 export default function EngineerAboutPage() {
   return (
@@ -12,22 +12,38 @@ export default function EngineerAboutPage() {
       <div className="absolute inset-0 bg-tech-grid opacity-[0.08] pointer-events-none" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 pt-12 md:pt-16">
-        {/* TOP STATUS BREADCRUMB */}
-        <ScrollReveal direction="down">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0A1210] border border-[#12261F] text-xs font-mono text-[#00FF9C] mb-6">
-            <Terminal className="w-3.5 h-3.5" />
-            <span>SYS_ID: CHRIS // ARCHITECTURE &amp; THREE-LANE IDENTITY</span>
+        {/* Header Breadcrumb & Center-Right Ambient Logo */}
+        <div className="relative mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <ScrollReveal direction="down" className="max-w-2xl relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0A1210] border border-[#12261F] text-xs font-mono text-[#00FF9C] mb-6">
+              <Sparkles className="w-3.5 h-3.5 text-[#00FF9C]" />
+              <span>SYS_ID: CHRIS // ARCHITECTURE &amp; THREE-LANE IDENTITY</span>
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#E8F5EF] mb-4">
+              BEYOND THE <br />
+              <span className="text-[#00FF9C] drop-shadow-[0_0_20px_rgba(0,255,156,0.35)]">
+                CIRCUIT BOARD.
+              </span>
+            </h1>
+            <p className="text-[#7C9A8E] text-base md:text-lg leading-relaxed">
+              A relentless pursuit of technical precision, cinematic craft, and rooted human service.
+            </p>
+          </ScrollReveal>
+
+          {/* Logo with reduced opacity at center-right */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 md:relative md:top-auto md:translate-y-0 shrink-0 pointer-events-none select-none z-0 pr-0 md:pr-4 lg:pr-8">
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 opacity-35 md:opacity-45">
+              <Image
+                src="/assets/engineer/engineer-emblem.png"
+                alt="Engineer Logo Emblem"
+                fill
+                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
+                className="object-contain filter drop-shadow-[0_0_50px_rgba(0,255,156,0.5)] brightness-110"
+                priority
+              />
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#E8F5EF] mb-4">
-            BEYOND THE <br />
-            <span className="text-[#00FF9C] drop-shadow-[0_0_20px_rgba(0,255,156,0.35)]">
-              CIRCUIT BOARD.
-            </span>
-          </h1>
-          <p className="text-[#7C9A8E] text-base md:text-lg max-w-2xl leading-relaxed mb-12">
-            A relentless pursuit of technical precision, cinematic craft, and rooted human service.
-          </p>
-        </ScrollReveal>
+        </div>
 
         {/* PHOTO & BIO BLOCK WITH ANCHORED SOFT GREEN GLOW */}
         <div className="relative mb-20">
@@ -40,28 +56,15 @@ export default function EngineerAboutPage() {
             }}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center p-8 md:p-12 bg-[#0A1210]/80 border border-[#12261F] shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
-            {/* LEFT: Portrait Shot */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div
-                className="relative w-full max-w-xs aspect-[4/5] overflow-hidden group"
-                style={{
-                  maskImage:
-                    "radial-gradient(ellipse 96% 92% at 50% 50%, black 50%, transparent 95%)",
-                  WebkitMaskImage:
-                    "radial-gradient(ellipse 96% 92% at 50% 50%, black 50%, transparent 95%)",
-                }}
-              >
-                {/* Soft backdrop inside the mask */}
-                <div className="absolute inset-0 bg-[#050807]/70 pointer-events-none" />
-
-                {/* Reticle Marks */}
-
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end p-8 md:p-12 pb-0 md:pb-0 bg-[#0A1210]/80 border border-[#12261F] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
+            {/* LEFT: Portrait Shot Grounded at Card Base */}
+            <div className="lg:col-span-5 flex justify-center self-end">
+              <div className="relative w-full max-w-sm aspect-[2/3] group">
                 <Image
                   src="/assets/engineer/engineer-portrait-neon.png"
                   alt="Chris — Engineer & Creative Director"
                   fill
-                  sizes="(max-width: 768px) 100vw, 320px"
+                  sizes="(max-width: 768px) 100vw, 360px"
                   priority
                   className="object-contain object-bottom filter contrast-110 group-hover:scale-105 transition-transform duration-500"
                 />
@@ -69,7 +72,7 @@ export default function EngineerAboutPage() {
             </div>
 
             {/* RIGHT: Biographical Narrative */}
-            <div className="lg:col-span-7 space-y-5">
+            <div className="lg:col-span-7 space-y-5 pb-8 md:pb-12">
               <div className="text-xs font-mono text-[#FFC900] tracking-widest uppercase">
                 {"// SYSTEM OPERATOR PROFILE"}
               </div>
@@ -103,7 +106,7 @@ export default function EngineerAboutPage() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#00FF9C]" />
-                  <span>Parish Leadership</span>
+                  <span>Leadership</span>
                 </div>
               </div>
             </div>
@@ -121,9 +124,6 @@ export default function EngineerAboutPage() {
                 THE THREE-LANE IDENTITY
               </h2>
             </div>
-            <span className="text-xs font-mono text-[#7C9A8E] hidden sm:block">
-              TRI-PILLAR SYNCHRONIZATION
-            </span>
           </div>
         </ScrollReveal>
 
@@ -142,7 +142,7 @@ export default function EngineerAboutPage() {
                 </p>
               </div>
               <div className="pt-4 border-t border-[#12261F] text-[11px] font-mono text-[#00FF9C]">
-                FOCUS: STM32 / ALTIUM / RTOS / IOT
+                FOCUS:ESP32/ PROTOCOLS / IOT
               </div>
             </div>
           </StaggerItem>
@@ -174,13 +174,13 @@ export default function EngineerAboutPage() {
                   <HeartHandshake className="w-6 h-6" />
                 </div>
                 <div className="text-xs font-mono text-[#00FF9C] mb-1">LANE 03 // THE ANCHOR</div>
-                <h3 className="text-xl font-bold text-[#E8F5EF] mb-3">Parish &amp; Community</h3>
+                <h3 className="text-xl font-bold text-[#E8F5EF] mb-3">Community</h3>
                 <p className="text-xs text-[#7C9A8E] leading-relaxed mb-4">
                   The moral compass. Active involvement in church parish management, youth leadership, organizing large-scale regional events, and technical audio-visual operations. Keeping technology tethered to human empathy.
                 </p>
               </div>
               <div className="pt-4 border-t border-[#12261F] text-[11px] font-mono text-[#00FF9C]">
-                FOCUS: LEADERSHIP / MENTORSHIP / AV
+                FOCUS: LEADERSHIP / MENTORSHIP
               </div>
             </div>
           </StaggerItem>

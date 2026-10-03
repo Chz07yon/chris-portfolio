@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/effects/ScrollReveal";
 import { Palette, Layers, ArrowUpRight, X, Layout } from "lucide-react";
@@ -114,22 +115,38 @@ export default function StudioDesignsPage() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-12 md:pt-16">
-        {/* Header Breadcrumb */}
-        <ScrollReveal direction="down">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#00A3C4]/40 rounded-full text-xs text-[#00A3C4] mb-6">
-            <Palette className="w-3.5 h-3.5" />
-            <span>THE CYAN DIVISION // BRANDING, EDITORIAL &amp; INTERFACES</span>
+      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-12 md:pt-16">
+        {/* Header Breadcrumb & Center-Right Ambient Logo */}
+        <div className="relative mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <ScrollReveal direction="down" className="max-w-2xl relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#00A3C4]/40 rounded-full text-xs text-[#00A3C4] mb-6">
+              <Palette className="w-3.5 h-3.5" />
+              <span>THE CYAN DIVISION // BRANDING, EDITORIAL &amp; INTERFACES</span>
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E0F10] mb-4">
+              CYAN DESIGN <br />
+              <span className="text-[#00A3C4] italic">PORTFOLIO</span> &amp; SYSTEMS.
+            </h1>
+            <p className="text-[#7A6A62] text-base md:text-lg leading-relaxed">
+              The visual architecture branch of The Red Studios. Uniting Swiss typographic discipline,
+              bespoke vector identity systems, and tactile print monographs.
+            </p>
+          </ScrollReveal>
+
+          {/* Logo with reduced opacity at center-right */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 md:relative md:top-auto md:translate-y-0 shrink-0 pointer-events-none select-none z-0 pr-0 md:pr-4 lg:pr-8">
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 opacity-30 md:opacity-40">
+              <Image
+                src="/assets/studio/studio-emblem.png"
+                alt="Studio Logo Emblem"
+                fill
+                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
+                className="object-contain filter drop-shadow-[0_4px_30px_rgba(200,16,46,0.3)]"
+                priority
+              />
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E0F10] mb-4">
-            CYAN DESIGN <br />
-            <span className="text-[#00A3C4] italic">PORTFOLIO</span> &amp; SYSTEMS.
-          </h1>
-          <p className="text-[#7A6A62] text-base md:text-lg max-w-2xl leading-relaxed mb-10">
-            The visual architecture branch of The Red Studios. Uniting Swiss typographic discipline,
-            bespoke vector identity systems, and tactile print monographs.
-          </p>
-        </ScrollReveal>
+        </div>
 
         {/* DISCIPLINE FILTER TABS */}
         <div className="flex flex-wrap items-center gap-2 pb-8 border-b border-[#E5D5C2] mb-12">

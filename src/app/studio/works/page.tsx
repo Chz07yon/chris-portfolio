@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/effects/ScrollReveal";
 import { MagneticButton } from "@/components/ui/MagneticButton";
@@ -126,21 +127,38 @@ export default function StudioWorksPage() {
   return (
     <main className="min-h-screen relative overflow-hidden bg-[#F6EFE4] text-[#1E0F10] pb-32">
       {/* 1. TOP IVORY FRAMING SECTION */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-12">
-        <ScrollReveal direction="down">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#E5D5C2] rounded-full text-xs text-[#C8102E] mb-6">
-            <Clapperboard className="w-3.5 h-3.5" />
-            <span>EXHIBITION CATALOG // CINEMATOGRAPHY &amp; VISUALS</span>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-12 md:pt-16 pb-12">
+        {/* Header Breadcrumb & Center-Right Ambient Logo */}
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <ScrollReveal direction="down" className="max-w-2xl relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#E5D5C2] rounded-full text-xs text-[#C8102E] mb-6">
+              <Clapperboard className="w-3.5 h-3.5" />
+              <span>EXHIBITION CATALOG // CINEMATOGRAPHY &amp; VISUALS</span>
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E0F10] mb-4">
+              FEATURED <br />
+              <span className="text-[#C8102E] italic">WORKS</span> &amp; PRODUCTIONS.
+            </h1>
+            <p className="text-[#7A6A62] text-base md:text-lg leading-relaxed">
+              Curated motion picture reels, campaign narratives, and cultural documentaries.
+              Framed in our dedicated dark viewing gallery for optimal contrast and visual immersion.
+            </p>
+          </ScrollReveal>
+
+          {/* Logo with reduced opacity at center-right */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 md:relative md:top-auto md:translate-y-0 shrink-0 pointer-events-none select-none z-0 pr-0 md:pr-4 lg:pr-8">
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 opacity-30 md:opacity-40">
+              <Image
+                src="/assets/studio/studio-emblem.png"
+                alt="Studio Logo Emblem"
+                fill
+                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
+                className="object-contain filter drop-shadow-[0_4px_30px_rgba(200,16,46,0.3)]"
+                priority
+              />
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E0F10] mb-4">
-            FEATURED <br />
-            <span className="text-[#C8102E] italic">WORKS</span> &amp; PRODUCTIONS.
-          </h1>
-          <p className="text-[#7A6A62] text-base md:text-lg max-w-2xl leading-relaxed">
-            Curated motion picture reels, campaign narratives, and cultural documentaries.
-            Framed in our dedicated dark viewing gallery for optimal contrast and visual immersion.
-          </p>
-        </ScrollReveal>
+        </div>
       </section>
 
       {/* 2. DEDICATED DARK SECTION (Near-black / charcoal background so photography POPS) */}

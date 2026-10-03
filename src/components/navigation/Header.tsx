@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
 import { MagneticWrapper } from "@/components/ui/MagneticButton";
 import { Menu, X } from "lucide-react";
@@ -19,6 +19,32 @@ export function Header() {
   const { mode } = useTheme();
   const isEng = mode === "engineer";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (mobileMenuOpen) return;
+    const previous = scrollY.getPrevious() ?? 0;
+    const diff = latest - previous;
+
+    if (latest < 40) {
+      setIsCollapsed(false);
+    } else if (diff > 8) {
+      // Scrolling down: collapse nav items except logo
+      setIsCollapsed(true);
+    } else if (diff < -8) {
+      // Scrolling up: reveal header
+      setIsCollapsed(false);
+    }
+  });
+
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setIsCollapsed(false);
+    setMobileMenuOpen(false);
+  }
 
   // Engineer Navigation: [About] [My Journey] — Emblem — [Works] [Certification]
   const engineerLeftNav: NavItem[] = [
@@ -81,16 +107,21 @@ export function Header() {
                 priority
               />
             </div>
-            <span
+            <motion.span
+              animate={{ opacity: isCollapsed ? 0 : 1, x: isCollapsed ? -8 : 0 }}
+              transition={{ duration: 0.25 }}
               className={`text-xs font-mono tracking-widest font-bold ${
                 isEng ? "text-[#00FF9C]" : "text-[#C8102E]"
               }`}
             >
               {isEng ? "CHRIS // ECE" : "THE RED STUDIOS"}
-            </span>
+            </motion.span>
           </Link>
 
-          <button
+          <motion.button
+            animate={{ opacity: isCollapsed ? 0 : 1, scale: isCollapsed ? 0.85 : 1 }}
+            transition={{ duration: 0.25 }}
+            style={{ pointerEvents: isCollapsed ? "none" : "auto" }}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
             className={`p-2 transition-colors ${
@@ -100,13 +131,23 @@ export function Header() {
             }`}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          </motion.button>
         </div>
 
         {/* Desktop Balanced 5-Part Navigation Bar (Background: none, sits over hero portrait) */}
         <div className="hidden md:flex items-center gap-12 lg:gap-16 pointer-events-auto select-none">
           {/* LEFT NAV ITEMS */}
-          <div className="flex items-center gap-8 lg:gap-10">
+          <motion.div
+            initial={false}
+            animate={{
+              opacity: isCollapsed ? 0 : 1,
+              x: isCollapsed ? 28 : 0,
+              scale: isCollapsed ? 0.92 : 1,
+            }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            style={{ pointerEvents: isCollapsed ? "none" : "auto" }}
+            className="flex items-center gap-8 lg:gap-10"
+          >
             {leftNav.map((item) => {
               const active = isLinkActive(item.href);
               return (
@@ -139,16 +180,20 @@ export function Header() {
                 </MagneticWrapper>
               );
             })}
-          </div>
+          </motion.div>
 
-          {/* CENTER EMBLEM (Enlarged & static high-clarity anchor, not attracted to cursor) */}
+          {/* CENTER EMBLEM (Enlarged & static high-clarity anchor, stays visible on scroll) */}
           <Link
             href={homeHref}
             data-no-magnetic="true"
             aria-label={isEng ? "Chris Engineer Home" : "The Red Studios Home"}
             className="relative group block mx-4 lg:mx-8"
           >
-            <div
+            <motion.div
+              animate={{
+                scale: isCollapsed ? 0.95 : 1,
+              }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="relative w-16 h-16 lg:w-20 lg:h-20 transition-transform duration-300 group-hover:scale-105 flex items-center justify-center"
             >
               <Image
@@ -164,11 +209,21 @@ export function Header() {
                 }`}
                 priority
               />
-            </div>
+            </motion.div>
           </Link>
 
           {/* RIGHT NAV ITEMS */}
-          <div className="flex items-center gap-8 lg:gap-10">
+          <motion.div
+            initial={false}
+            animate={{
+              opacity: isCollapsed ? 0 : 1,
+              x: isCollapsed ? -28 : 0,
+              scale: isCollapsed ? 0.92 : 1,
+            }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            style={{ pointerEvents: isCollapsed ? "none" : "auto" }}
+            className="flex items-center gap-8 lg:gap-10"
+          >
             {rightNav.map((item) => {
               const active = isLinkActive(item.href);
               return (
@@ -201,7 +256,7 @@ export function Header() {
                 </MagneticWrapper>
               );
             })}
-          </div>
+          </motion.div>
         </div>
 
         {/* MOBILE OVERLAY DRAWER */}

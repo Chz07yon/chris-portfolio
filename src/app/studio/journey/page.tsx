@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { ScrollReveal } from "@/components/effects/ScrollReveal";
 import { Sparkles, Camera, ChevronDown, Aperture } from "lucide-react";
@@ -129,21 +130,38 @@ export default function StudioJourneyPage() {
         }}
       />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 pt-12 md:pt-16">
-        <ScrollReveal direction="down">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#E5D5C2] rounded-full text-xs text-[#C8102E] mb-6">
-            <Sparkles className="w-3.5 h-3.5 text-[#C99A2E]" />
-            <span>MANDALA &amp; FILMSTRIP // CREATIVE TIMELINE</span>
+      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-12 md:pt-16">
+        {/* Header Breadcrumb & Center-Right Ambient Logo */}
+        <div className="relative mb-16 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <ScrollReveal direction="down" className="max-w-2xl relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#E5D5C2] rounded-full text-xs text-[#C8102E] mb-6">
+              <Sparkles className="w-3.5 h-3.5 text-[#C99A2E]" />
+              <span>MANDALA &amp; FILMSTRIP // CREATIVE TIMELINE</span>
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E0F10] mb-4">
+              CHRONOLOGICAL <br />
+              <span className="text-[#C8102E] italic">FILMSTRIP</span> &amp; ODYSSEY.
+            </h1>
+            <p className="text-[#7A6A62] text-base md:text-lg leading-relaxed">
+              A continuous film reel tracing our evolution from initial frames to cinematic direction.
+              Click or scroll to any aperture node to open the production reel.
+            </p>
+          </ScrollReveal>
+
+          {/* Logo with reduced opacity at center-right */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 md:relative md:top-auto md:translate-y-0 shrink-0 pointer-events-none select-none z-0 pr-0 md:pr-4 lg:pr-8">
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 opacity-30 md:opacity-40">
+              <Image
+                src="/assets/studio/studio-emblem.png"
+                alt="Studio Logo Emblem"
+                fill
+                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
+                className="object-contain filter drop-shadow-[0_4px_30px_rgba(200,16,46,0.3)]"
+                priority
+              />
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E0F10] mb-4">
-            CHRONOLOGICAL <br />
-            <span className="text-[#C8102E] italic">FILMSTRIP</span> &amp; ODYSSEY.
-          </h1>
-          <p className="text-[#7A6A62] text-base md:text-lg max-w-2xl leading-relaxed mb-16">
-            A continuous film reel tracing our evolution from initial frames to cinematic direction.
-            Click or scroll to any aperture node to open the production reel.
-          </p>
-        </ScrollReveal>
+        </div>
 
         {/* TIMELINE CONTAINER WITH CENTRAL FILMSTRIP TRACK */}
         <div className="relative">
