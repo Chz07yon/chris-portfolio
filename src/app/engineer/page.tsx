@@ -8,7 +8,7 @@ import { MagneticButton } from "@/components/ui/MagneticButton";
 import { SocialIconRow } from "@/components/ui/SocialIconRow";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/effects/ScrollReveal";
 import { socials } from "@/lib/socials";
-import { Terminal, Cpu, ArrowUpRight, ShieldCheck, Layers, ChevronDown } from "lucide-react";
+import { Cpu, ArrowUpRight, ShieldCheck, Layers, ChevronDown } from "lucide-react";
 
 export default function EngineerHomePage() {
   const router = useRouter();
@@ -47,13 +47,6 @@ export default function EngineerHomePage() {
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 md:pt-6">
           {/* LEFT COLUMN: Technical Narrative, CTAs & Socials */}
           <div className="lg:col-span-7 space-y-6 order-2 lg:order-1">
-            <ScrollReveal direction="down" delay={0.1}>
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0A1210] border border-[#12261F] text-xs font-mono text-[#00FF9C]">
-                <Terminal className="w-3.5 h-3.5" />
-                <span>ECE HARDWARE ARCHITECT &amp; EMBEDDED DEVELOPER</span>
-              </div>
-            </ScrollReveal>
-
             <ScrollReveal direction="up" delay={0.2}>
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#E8F5EF] leading-[1.04]">
                 PRECISION <br />
@@ -128,12 +121,6 @@ export default function EngineerHomePage() {
                     className="w-full h-full translate-y-8 md:translate-y-10"
                   />
                 </div>
-
-                {/* Mobile / Desktop Inspection Cue */}
-                <div className="mt-3 flex items-center justify-between text-[11px] font-mono text-[#7C9A8E]">
-                  <span>HOVER / TOUCH PORTRAIT TO INSPECT CIRCUITS</span>
-                  <span className="text-[#00FF9C]">MASK: 80PX</span>
-                </div>
               </div>
             </ScrollReveal>
           </div>
@@ -163,9 +150,6 @@ export default function EngineerHomePage() {
                 ENGINEERING DOMAINS
               </h2>
             </div>
-            <span className="text-xs font-mono text-[#7C9A8E] hidden sm:block">
-              SEC_01 // SYSTEM SPECIFICATION
-            </span>
           </div>
         </ScrollReveal>
 

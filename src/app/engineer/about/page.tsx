@@ -15,10 +15,6 @@ export default function EngineerAboutPage() {
         {/* Header Breadcrumb & Center-Right Ambient Logo */}
         <div className="relative mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <ScrollReveal direction="down" className="max-w-2xl relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0A1210] border border-[#12261F] text-xs font-mono text-[#00FF9C] mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-[#00FF9C]" />
-              <span>SYS_ID: CHRIS // ARCHITECTURE &amp; THREE-LANE IDENTITY</span>
-            </div>
             <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#E8F5EF] mb-4">
               BEYOND THE <br />
               <span className="text-[#00FF9C] drop-shadow-[0_0_20px_rgba(0,255,156,0.35)]">
@@ -59,14 +55,14 @@ export default function EngineerAboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end p-8 md:p-12 pb-0 md:pb-0 bg-[#0A1210]/80 border border-[#12261F] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
             {/* LEFT: Portrait Shot Grounded at Card Base */}
             <div className="lg:col-span-5 flex justify-center self-end">
-              <div className="relative w-full max-w-sm aspect-[2/3] group">
+              <div className="relative w-full max-w-sm aspect-[2/3] pointer-events-none select-none">
                 <Image
                   src="/assets/engineer/engineer-portrait-neon.png"
                   alt="Chris — Engineer & Creative Director"
                   fill
                   sizes="(max-width: 768px) 100vw, 360px"
                   priority
-                  className="object-contain object-bottom filter contrast-110 group-hover:scale-105 transition-transform duration-500"
+                  className="object-contain object-bottom filter contrast-110"
                 />
               </div>
             </div>

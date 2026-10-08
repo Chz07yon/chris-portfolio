@@ -6,7 +6,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { Cpu, Film } from "lucide-react";
 
 export function WorldPill() {
-  const { mode, initiateWorldSwitch, worldSwitchState } = useTheme();
+  const { mode, initiateWorldSwitch, worldSwitchState, isHeaderHidden } = useTheme();
   const isEng = mode === "engineer";
 
   const handleSwitchToEngineer = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,8 +32,17 @@ export function WorldPill() {
   };
 
   return (
-    <aside
+    <motion.aside
       aria-label="World Switcher Pill"
+      initial={false}
+      animate={{
+        y: isHeaderHidden ? 100 : 0,
+        opacity: isHeaderHidden ? 0 : 1,
+      }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      style={{
+        pointerEvents: isHeaderHidden ? "none" : "auto",
+      }}
       className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] pointer-events-auto select-none"
     >
       <div
@@ -99,6 +108,6 @@ export function WorldPill() {
           </span>
         </button>
       </div>
-    </aside>
+    </motion.aside>
   );
 }

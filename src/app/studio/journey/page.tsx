@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { ScrollReveal } from "@/components/effects/ScrollReveal";
-import { Sparkles, Camera, ChevronDown, Aperture } from "lucide-react";
+import { Camera, ChevronDown, Aperture } from "lucide-react";
 
 interface StudioMilestone {
   id: string;
@@ -26,7 +26,7 @@ export default function StudioJourneyPage() {
   const milestones: StudioMilestone[] = [
     {
       id: "founding-rdx",
-      year: "2020",
+      year: "2025",
       category: "GENESIS // FIRST FRAMES",
       frameNumber: "FRAME_01",
       title: "Founding of RDX RED",
@@ -43,10 +43,10 @@ export default function StudioJourneyPage() {
     },
     {
       id: "icym-role",
-      year: "2021 — 2022",
-      category: "COMMUNITY // CULTURAL DOCUMENTATION",
+      year: "2025 - Present",
+      category: "COMMUNITY",
       frameNumber: "FRAME_02",
-      title: "ICYM Kokkada Parish Media Leadership",
+      title: "ICYM Kokkada Parish Media Lead",
       summary: "Entrusted with directing media operations, live multicam broadcasts, and cultural archives for ICYM Kokkada Parish celebrations.",
       details: {
         gearAndLighting: [
@@ -59,11 +59,11 @@ export default function StudioJourneyPage() {
       },
     },
     {
-      id: "rebrand-studio",
-      year: "2023",
-      category: "TRANSFORMATION // STUDIO PRACTICE",
+      id: "rebranding",
+      year: "2026",
+      category: "TRANSFORMATION",
       frameNumber: "FRAME_03",
-      title: "Rebrand to THE RED STUDIOS",
+      title: "Rebranding to THE RED STUDIOS",
       summary: "Transitioned from a casual creative outlet to a dedicated cinematic and visual architecture studio with professional cinema glass and workflow rigor.",
       details: {
         gearAndLighting: [
@@ -77,7 +77,7 @@ export default function StudioJourneyPage() {
     },
     {
       id: "red-cyan-division",
-      year: "2023 — 2024",
+      year: "2026",
       category: "EXPANSION // DUAL SPECTRUM",
       frameNumber: "FRAME_04",
       title: "RED + CYAN Divisions Formed",
@@ -94,19 +94,19 @@ export default function StudioJourneyPage() {
     },
     {
       id: "shoots",
-      year: "2024 — PRESENT",
+      year: "2026",
       category: "EXHIBITION // CINEMATIC LANDMARKS",
       frameNumber: "FRAME_05",
-      title: "High-Concept Brand Campaigns & Narrative Films",
-      summary: "Directing luxury editorial fashion films, spatial architectural studies, and bespoke commercial productions across India.",
+      title: "After Effects and Motion Design",
+      summary: "Currently working on After Effects and Motion Design.",
       details: {
         gearAndLighting: [
-          "Arri / Sony FX cinema suites with vintage prime lenses",
-          "Precision wireless follow-focus & calibrated LED RGBACL lighting matrices",
-          "Spatial binaural sound design married with custom score compositions",
+          "After Effects",
+          "Motion Design",
+          "Visual Effects",
         ],
         deliverables: "Award-winning commercial campaigns, festival submissions, and high-impact editorial publications.",
-        artisticTakeaway: "Great cinema does not merely show a story — it creates an atmosphere in which the audience breathes differently.",
+        artisticTakeaway: "Working on After Effects and Motion Design.",
       },
     },
   ];
@@ -134,10 +134,6 @@ export default function StudioJourneyPage() {
         {/* Header Breadcrumb & Center-Right Ambient Logo */}
         <div className="relative mb-16 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <ScrollReveal direction="down" className="max-w-2xl relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#E5D5C2] rounded-full text-xs text-[#C8102E] mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-[#C99A2E]" />
-              <span>MANDALA &amp; FILMSTRIP // CREATIVE TIMELINE</span>
-            </div>
             <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E0F10] mb-4">
               CHRONOLOGICAL <br />
               <span className="text-[#C8102E] italic">FILMSTRIP</span> &amp; ODYSSEY.
@@ -185,30 +181,27 @@ export default function StudioJourneyPage() {
                   <button
                     onClick={() => setActiveNode(isExpanded ? "" : node.id)}
                     aria-label={`Toggle details for ${node.title}`}
-                    className={`absolute left-[13px] md:left-[37px] top-6 -translate-x-1/2 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 select-none shadow-md ${
-                      isExpanded
-                        ? "bg-[#C8102E] text-[#FFFAF2] border-2 border-[#FFFAF2] shadow-[0_0_20px_rgba(200,16,46,0.5)] scale-110"
-                        : "bg-[#FFFAF2] text-[#C8102E] border-2 border-[#C8102E]/50 hover:border-[#C8102E] group-hover:scale-105"
-                    }`}
+                    className={`absolute left-[13px] md:left-[37px] top-6 -translate-x-1/2 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 select-none shadow-md ${isExpanded
+                      ? "bg-[#C8102E] text-[#FFFAF2] border-2 border-[#FFFAF2] shadow-[0_0_20px_rgba(200,16,46,0.5)] scale-110"
+                      : "bg-[#FFFAF2] text-[#C8102E] border-2 border-[#C8102E]/50 hover:border-[#C8102E] group-hover:scale-105"
+                      }`}
                   >
                     <Aperture className={`w-4 h-4 ${isExpanded ? "animate-spin" : ""}`} style={{ animationDuration: "12s" }} />
                   </button>
 
                   {/* HORIZONTAL FILMSTRIP SPROCKET CONNECTOR */}
                   <div
-                    className={`absolute left-6 md:left-12 top-10 w-10 md:w-16 h-[2px] transition-colors duration-300 pointer-events-none ${
-                      isExpanded ? "bg-[#C8102E]" : "bg-[#E5D5C2] group-hover:bg-[#C8102E]/40"
-                    }`}
+                    className={`absolute left-6 md:left-12 top-10 w-10 md:w-16 h-[2px] transition-colors duration-300 pointer-events-none ${isExpanded ? "bg-[#C8102E]" : "bg-[#E5D5C2] group-hover:bg-[#C8102E]/40"
+                      }`}
                   />
 
                   {/* PRODUCTION CARD */}
                   <div
                     onClick={() => setActiveNode(isExpanded ? "" : node.id)}
-                    className={`cursor-pointer transition-all duration-300 p-7 md:p-8 bg-[#FFFAF2] border rounded-3xl select-none shadow-sm ${
-                      isExpanded
-                        ? "border-[#C8102E] shadow-[0_15px_40px_rgba(200,16,46,0.15)] ring-1 ring-[#C8102E]/20"
-                        : "border-[#E5D5C2] hover:border-[#C8102E]/40 hover:shadow-md"
-                    }`}
+                    className={`cursor-pointer transition-all duration-300 p-7 md:p-8 bg-[#FFFAF2] border rounded-3xl select-none shadow-sm ${isExpanded
+                      ? "border-[#C8102E] shadow-[0_15px_40px_rgba(200,16,46,0.15)] ring-1 ring-[#C8102E]/20"
+                      : "border-[#E5D5C2] hover:border-[#C8102E]/40 hover:shadow-md"
+                      }`}
                   >
                     {/* Header */}
                     <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
@@ -284,9 +277,8 @@ export default function StudioJourneyPage() {
                     <div className="mt-4 flex items-center justify-between text-[11px] text-[#7A6A62] pt-2">
                       <span>{isExpanded ? "CLICK TO COLLAPSE" : "CLICK TO UNROLL PRODUCTION REEL"}</span>
                       <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-300 text-[#C8102E] ${
-                          isExpanded ? "rotate-180" : ""
-                        }`}
+                        className={`w-4 h-4 transition-transform duration-300 text-[#C8102E] ${isExpanded ? "rotate-180" : ""
+                          }`}
                       />
                     </div>
                   </div>

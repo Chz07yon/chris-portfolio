@@ -479,36 +479,40 @@ function WorldEmblemMaterializeTransition({
 
   // Dynamic progress value for emblem internal animation (blades rotating open or circuit line drawing)
   const [revealProgress, setRevealProgress] = useState(0);
+  const [prevPhase, setPrevPhase] = useState(phase);
 
-  useEffect(() => {
-    if (isReducedMotion) return;
-
+  if (prevPhase !== phase) {
+    setPrevPhase(phase);
     if (phase === "dim" || phase === "emblem") {
       setRevealProgress(0);
-    } else if (phase === "reveal") {
-      let animId: number;
-      const startTime = performance.now();
-      const DURATION = 700; // 700ms smooth reveal duration (700ms - 1400ms)
-
-      const tick = (now: number) => {
-        const elapsed = now - startTime;
-        const p = Math.min(1, elapsed / DURATION);
-        // Luxurious smooth easeOutCubic curve
-        const eased = 1 - Math.pow(1 - p, 2.5);
-        setRevealProgress(eased);
-
-        if (elapsed < DURATION) {
-          animId = requestAnimationFrame(tick);
-        } else {
-          setRevealProgress(1);
-        }
-      };
-
-      animId = requestAnimationFrame(tick);
-      return () => cancelAnimationFrame(animId);
     } else if (phase === "settle") {
       setRevealProgress(1);
     }
+  }
+
+  useEffect(() => {
+    if (isReducedMotion || phase !== "reveal") return;
+
+    let animId: number;
+    const startTime = performance.now();
+    const DURATION = 700; // 700ms smooth reveal duration (700ms - 1400ms)
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const p = Math.min(1, elapsed / DURATION);
+      // Luxurious smooth easeOutCubic curve
+      const eased = 1 - Math.pow(1 - p, 2.5);
+      setRevealProgress(eased);
+
+      if (elapsed < DURATION) {
+        animId = requestAnimationFrame(tick);
+      } else {
+        setRevealProgress(1);
+      }
+    };
+
+    animId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animId);
   }, [phase, isReducedMotion]);
 
   // Reduced motion: flat 200ms crossfade, NO emblems, NO traces

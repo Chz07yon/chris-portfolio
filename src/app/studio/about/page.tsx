@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/effects/ScrollReveal";
-import { Palette, Clapperboard, Sparkles, HeartHandshake, CheckCircle2 } from "lucide-react";
+import { Palette, Clapperboard, HeartHandshake, CheckCircle2 } from "lucide-react";
 
 export default function StudioAboutPage() {
   return (
@@ -21,10 +21,6 @@ export default function StudioAboutPage() {
         {/* Top Breadcrumb & Center-Right Ambient Logo */}
         <div className="relative mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <ScrollReveal direction="down" className="max-w-2xl relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#E5D5C2] rounded-full text-xs text-[#C8102E] mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-[#C99A2E]" />
-              <span>MANIFESTO // THE RED STUDIOS ARCHITECTURE</span>
-            </div>
             <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#1E0F10] mb-4">
               VISUAL POETRY &amp; <br />
               <span className="text-[#C8102E] italic">DUAL-SPECTRUM</span> DESIGN.
@@ -64,17 +60,14 @@ export default function StudioAboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end p-8 md:p-12 pb-0 md:pb-0 bg-[#FFFAF2] border border-[#E5D5C2] rounded-3xl shadow-[0_20px_60px_rgba(58,10,16,0.08)]">
             {/* LEFT: Portrait Shot Grounded at Card Base */}
             <div className="lg:col-span-5 flex justify-center self-end">
-              <div className="relative w-full max-w-sm aspect-[2/3] group">
-                <div className="absolute top-0 left-0 z-20 text-[10px] tracking-wide text-[#C8102E] font-medium bg-[#FFFAF2]/90 px-2.5 py-0.5 rounded-full border border-[#E5D5C2]/60">
-                  STUDIO ARCHIVE
-                </div>
+              <div className="relative w-full max-w-sm aspect-[2/3] pointer-events-none select-none">
                 <Image
                   src="/assets/studio/studio-portrait-mandala.png"
                   alt="Chris — The Red Studios"
                   fill
                   sizes="(max-width: 768px) 100vw, 360px"
                   priority
-                  className="object-contain object-bottom group-hover:scale-105 transition-transform duration-500"
+                  className="object-contain object-bottom"
                 />
               </div>
             </div>
@@ -132,9 +125,6 @@ export default function StudioAboutPage() {
                 THE RED + CYAN DIVISIONS
               </h2>
             </div>
-            <span className="text-xs text-[#7A6A62] hidden sm:block">
-              DUAL-SPECTRUM PRACTICE
-            </span>
           </div>
         </ScrollReveal>
 

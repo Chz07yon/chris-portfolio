@@ -22,6 +22,8 @@ interface ThemeContextType {
   initiateWorldSwitch: (targetMode: WorldMode, origin?: { x: number; y: number }) => void;
   worldSwitchState: WorldSwitchState;
   isPending: boolean;
+  isHeaderHidden: boolean;
+  setHeaderHidden: (hidden: boolean) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -73,6 +75,13 @@ export function ThemeProvider({
     toMode: activeMode,
     origin: { x: 500, y: 700 },
   });
+
+  const [isHeaderHidden, setHeaderHidden] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setHeaderHidden(false);
+  }
 
   const timersRef = useRef<NodeJS.Timeout[]>([]);
 
@@ -235,6 +244,8 @@ export function ThemeProvider({
         initiateWorldSwitch,
         worldSwitchState,
         isPending: worldSwitchState.isSwitching,
+        isHeaderHidden,
+        setHeaderHidden,
       }}
     >
       {children}

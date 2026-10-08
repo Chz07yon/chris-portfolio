@@ -16,7 +16,7 @@ interface NavItem {
 
 export function Header() {
   const pathname = usePathname();
-  const { mode } = useTheme();
+  const { mode, isHeaderHidden } = useTheme();
   const isEng = mode === "engineer";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -84,7 +84,18 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none transition-colors duration-300">
+    <motion.header
+      initial={false}
+      animate={{
+        y: isHeaderHidden ? -100 : 0,
+        opacity: isHeaderHidden ? 0 : 1,
+      }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      style={{
+        pointerEvents: isHeaderHidden ? "none" : undefined,
+      }}
+      className="fixed top-0 left-0 right-0 z-50 pointer-events-none transition-colors duration-300"
+    >
       <nav
         aria-label="Main Navigation"
         className="max-w-7xl mx-auto px-6 py-4 md:py-5 flex items-center justify-between md:justify-center relative"
@@ -307,6 +318,6 @@ export function Header() {
           )}
         </AnimatePresence>
       </nav>
-    </header>
+    </motion.header>
   );
 }

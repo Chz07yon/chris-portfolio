@@ -8,7 +8,7 @@ import { MagneticButton } from "@/components/ui/MagneticButton";
 import { SocialIconRow } from "@/components/ui/SocialIconRow";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/effects/ScrollReveal";
 import { socials } from "@/lib/socials";
-import { Camera, ArrowUpRight, Palette, Clapperboard, Compass, ChevronDown } from "lucide-react";
+import { ArrowUpRight, Palette, Clapperboard, Compass, ChevronDown } from "lucide-react";
 
 export default function StudioHomePage() {
   const router = useRouter();
@@ -46,12 +46,6 @@ export default function StudioHomePage() {
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 md:pt-6">
           {/* LEFT COLUMN: Editorial Narrative, CTAs & Socials */}
           <div className="lg:col-span-7 space-y-6 order-2 lg:order-1">
-            <ScrollReveal direction="down" delay={0.1}>
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFFAF2] border border-[#E5D5C2] rounded-full text-xs text-[#C8102E]">
-                <Camera className="w-3.5 h-3.5" />
-                <span>VISUAL STORYTELLER &amp; CREATIVE PRODUCER</span>
-              </div>
-            </ScrollReveal>
 
             <ScrollReveal direction="up" delay={0.2}>
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#1E0F10] leading-[1.06]">
@@ -124,12 +118,6 @@ export default function StudioHomePage() {
                     className="w-full h-full translate-y-8 md:translate-y-10"
                   />
                 </div>
-
-                {/* Mobile / Desktop Inspection Cue */}
-                <div className="mt-3 flex items-center justify-between text-[11px] text-[#7A6A62]">
-                  <span>TAP &amp; DRAG TO UNVEIL INNER MANDALA</span>
-                  <span className="text-[#C8102E] font-medium">STUDIO CURSOR ACTIVE</span>
-                </div>
               </div>
             </ScrollReveal>
           </div>
@@ -159,9 +147,6 @@ export default function StudioHomePage() {
                 STUDIO CRAFT
               </h2>
             </div>
-            <span className="text-xs text-[#7A6A62] hidden sm:block">
-              SERIES 02 // CREATIVE PRACTICE
-            </span>
           </div>
         </ScrollReveal>
 
